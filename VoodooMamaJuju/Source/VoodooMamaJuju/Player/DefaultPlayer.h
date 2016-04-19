@@ -1,0 +1,51 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "Player/PlayerBase.h"
+#include "DefaultPlayer.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class VOODOOMAMAJUJU_API ADefaultPlayer : public APlayerBase
+{
+	GENERATED_BODY()
+
+	//TODO: Maybe find a more logical place for the camera logic? (just copied from TP_ThirdPersonCharacter.H example)
+
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
+
+	/** Follow camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
+
+	
+public:
+	ADefaultPlayer();
+
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	void MoveForward(float value) override;
+	void Lookup(float value) override;
+	void BuffPlayer() override;
+	void DebuffPlayer() override;
+	void RemoveBuff() override;
+	void RemoveDebuff() override;
+	void Buff() override;
+	void Debuff() override;
+	void SetLastingBuff() override;
+	void SetLastingDebuff() override;
+	void NormalColor() override;
+	void BuffColor() override;
+	void DebuffColor() override;
+	void NormalMovement() override;
+	void TimelineFinished() override;
+	void TimelinePullBack() override;
+
+	float cameraDist;
+};
