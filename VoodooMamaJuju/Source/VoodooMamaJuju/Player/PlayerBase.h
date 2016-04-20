@@ -31,71 +31,71 @@ public:
 
 
 	//floats and bools for our character
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float normalAcceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float buffAcceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float debuffAcceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float normalBrakingDeceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float buffBrakingDeceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float debuffBrakingDeceleration;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	bool isBuffed;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	bool isDebuffed;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	bool inBuffZone;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	bool inDebuffZone;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float normalBoomLength;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float buffBoomLength;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float debuffBoomLength;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	USkeletalMeshComponent *invertedMesh;
 
 	//** Materials */
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UMaterialInstanceDynamic *DynamicMatInst;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UMaterialInstanceDynamic *InvertedDynamicMatInst;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *solidGreen;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *outlineGreen;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *solidRed;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *outlineRed;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *solidPurple;
 
-	UPROPERTY()
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *outlinePurple;
 
 	//buff and debuff functions

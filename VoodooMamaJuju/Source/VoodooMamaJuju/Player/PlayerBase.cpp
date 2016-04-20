@@ -19,7 +19,7 @@ APlayerBase::APlayerBase()
 
 	PullBackTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("PullBackTimeline"));
 	PullBackFunction.BindUFunction(this, FName{ TEXT("TimelinePullBack") });
-	PullBackTimeline->SetTimelineLength(1.0f);
+	PullBackTimeline->SetTimelineLength(2.5f);
 	PullBackTimeline->SetTimelinePostUpdateFunc(PullBackFunction);
 	PullBackTimeline->SetTimelineLengthMode(TL_TimelineLength);
 
