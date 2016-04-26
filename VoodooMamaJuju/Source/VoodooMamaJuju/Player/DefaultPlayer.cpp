@@ -24,8 +24,10 @@ ADefaultPlayer::ADefaultPlayer()
 	{
 		invertedMesh->SetSkeletalMesh(InvertedMeshAsset.Object);
 	}
-
-	invertedMesh->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
+	invertedMesh->SetRelativeScale3D(FVector(.99, .99, .99));
+	//invertedMesh->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
+		invertedMesh->SetMasterPoseComponent(GetMesh());
+	//GetMesh()->SetMasterPoseComponent(invertedMesh);
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -41,6 +43,36 @@ ADefaultPlayer::ADefaultPlayer()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	FollowCamera->AddRelativeRotation(FRotator(-20, 0, 0));
 
+	// Internal particle effects for spark, buff, and debuff
+	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
+	PlayerSpark->AttachTo(GetCapsuleComponent());
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/PlayerSpark.PlayerSpark"));
+	if (sparkAsset.Succeeded())
+	{
+		PlayerSpark->SetTemplate(sparkAsset.Object);
+	}
+	PlayerSpark->SetRelativeLocation(FVector(0, -15, -40));
+	PlayerSpark->SetTranslucentSortPriority(50);
+
+	PlayerBuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerBuff"));
+	PlayerBuff->AttachTo(GetCapsuleComponent());
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> buffAsset(TEXT("/Game/Assets/Effects/PlayerBuff.PlayerBuff"));
+	if (buffAsset.Succeeded())
+	{
+		PlayerBuff->SetTemplate(buffAsset.Object);
+	}
+	PlayerBuff->SetTranslucentSortPriority(100);
+	PlayerBuff->bAutoActivate = false;
+
+	PlayerDebuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerDebuff"));
+	PlayerDebuff->AttachTo(GetCapsuleComponent());
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> debuffAsset(TEXT("/Game/Assets/Effects/PlayerDebuff.PlayerDebuff"));
+	if (debuffAsset.Succeeded())
+	{
+		PlayerDebuff->SetTemplate(debuffAsset.Object);
+	}
+	PlayerDebuff->SetTranslucentSortPriority(100);
+	PlayerDebuff->bAutoActivate = false;
 
 	//get and set all materials for player and inverted player
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialInst(TEXT("/Game/Assets/Materials/Character_Translucent_Mat"));
@@ -51,7 +83,6 @@ ADefaultPlayer::ADefaultPlayer()
 	static ConstructorHelpers::FObjectFinder<UTexture2D> redOutline(TEXT("/Game/Entities/Player/Model/Character_Red_Outline_Diffuse"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleSolid(TEXT("/Game/Entities/Player/Model/Character_Purple_Diffuse"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleOutline(TEXT("/Game/Entities/Player/Model/Character_Purple_Outline_Diffuse"));
-	
 	DynamicMatInst = GetMesh()->CreateDynamicMaterialInstance(0, MaterialInst.Object);
 	InvertedDynamicMatInst = invertedMesh->CreateDynamicMaterialInstance(0, InvertedMaterialInst.Object);
 	solidGreen = greenSolid.Object;
@@ -60,7 +91,6 @@ ADefaultPlayer::ADefaultPlayer()
 	outlineRed = redOutline.Object;
 	solidPurple = purpleSolid.Object;
 	outlinePurple = purpleOutline.Object;
-
 }
 
 void ADefaultPlayer::MoveForward(float value)
@@ -84,6 +114,8 @@ void ADefaultPlayer::NormalMovement()
 	cameraDist = normalBoomLength;
 	PullBackTimeline->Stop();
 	PullBackTimeline->PlayFromStart();
+	PlayerBuff->SetActive(false);
+	PlayerDebuff->SetActive(false);
 }
 
 //player gains buff
@@ -93,9 +125,9 @@ void ADefaultPlayer::BuffPlayer()
 	GetCharacterMovement()->AddImpulse((GetActorForwardVector() * 10000));
 	GetCharacterMovement()->MaxAcceleration = buffAcceleration;
     GetCharacterMovement()->BrakingDecelerationWalking = buffBrakingDeceleration;
+	PlayerBuff->SetActive(true);
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Buffed!!"));
-
 }
 
 //player gains debuff
@@ -105,22 +137,23 @@ void ADefaultPlayer::DebuffPlayer()
 	GetCharacterMovement()->Velocity = FVector(0, 0, 0);
 	GetCharacterMovement()->MaxAcceleration = debuffAcceleration;
 	GetCharacterMovement()->BrakingDecelerationWalking = debuffBrakingDeceleration;
+	PlayerDebuff->SetActive(true);
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Debuffed!!"));
-
 }
 
 void ADefaultPlayer::RemoveBuff()
 {
 	BuffTimeline->Stop();
 	isBuffed = false;
-
+	PlayerBuff->SetActive(false);
 }
 
 void ADefaultPlayer::RemoveDebuff()
 {
 	BuffTimeline->Stop();
 	isDebuffed = false;
+	PlayerDebuff->SetActive(false);
 }
 
 //player in a buff zone
@@ -176,7 +209,6 @@ void ADefaultPlayer::SetLastingBuff()
 {
 	inBuffZone = false;
 	BuffTimeline->ReverseFromEnd();
-
 }
 
 //left lasting debuff zone
@@ -184,28 +216,36 @@ void ADefaultPlayer :: SetLastingDebuff()
 {
 	inDebuffZone = false;
 	BuffTimeline->ReverseFromEnd();
-
 }
 
 void ADefaultPlayer::NormalColor()
 {
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("SolidTexture") }, solidGreen);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineGreen);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineGreen);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
 }
 
 void ADefaultPlayer::BuffColor()
 {
-	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("SolidTexture") }, solidRed);
+ 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("SolidTexture") }, solidRed);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineRed);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineRed);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
 }
 
 void ADefaultPlayer::DebuffColor()
 {
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("SolidTexture") }, solidPurple);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlinePurple);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
 	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlinePurple);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
 }
 
 //set the character back to normal after the buff/debuff time ends
@@ -222,4 +262,31 @@ void ADefaultPlayer::TimelineFinished()
 void ADefaultPlayer::TimelinePullBack()
 {
    	CameraBoom->TargetArmLength = FMath::Lerp(CameraBoom->TargetArmLength, cameraDist, (PullBackTimeline->GetPlaybackPosition() / PullBackTimeline->GetTimelineLength()));
+}
+
+void ADefaultPlayer::FadePlayer()
+{
+	pFade->PlayFromStart();
+}
+
+void ADefaultPlayer::StopFade()
+{
+	pFade->Stop();
+	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
+	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+}
+
+void ADefaultPlayer::FadeUpdate()
+{
+	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	GetMesh()->SetMaterial(0, DynamicMatInst);
+	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+}
+
+void ADefaultPlayer::FadeFinished()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
 }

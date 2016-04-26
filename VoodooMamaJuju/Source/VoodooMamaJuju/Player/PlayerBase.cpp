@@ -19,10 +19,17 @@ APlayerBase::APlayerBase()
 
 	PullBackTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("PullBackTimeline"));
 	PullBackFunction.BindUFunction(this, FName{ TEXT("TimelinePullBack") });
-	PullBackTimeline->SetTimelineLength(1.0f);
+	PullBackTimeline->SetTimelineLength(2.5f);
 	PullBackTimeline->SetTimelinePostUpdateFunc(PullBackFunction);
 	PullBackTimeline->SetTimelineLengthMode(TL_TimelineLength);
 
+	pFade = CreateDefaultSubobject<UTimelineComponent>(TEXT("Fade"));
+	FadeFinishedFunction.BindUFunction(this, FName{ TEXT("FadeFinished") });
+	FadeUpdateFunction.BindUFunction(this, FName{ TEXT("FadeUpdate") });
+	pFade->SetTimelineFinishedFunc(FadeFinishedFunction);
+	pFade->SetTimelineLength(10.0f);
+	pFade->SetTimelinePostUpdateFunc(FadeUpdateFunction);
+	pFade->SetTimelineLengthMode(TL_TimelineLength);
 }
 
 // Called when the game starts or when spawned
