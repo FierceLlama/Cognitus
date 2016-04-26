@@ -54,6 +54,10 @@ public:
 	void NormalMovement() override;
 	void TimelineFinished() override;
 	void TimelinePullBack() override;
+	void FadePlayer() override;
+	void StopFade() override;
+	void FadeUpdate() override;
+	void FadeFinished() override;
 
 	float cameraDist;
 	/*static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialInst(TEXT("/Game/Assets/Materials/Character_Translucent_Mat"));

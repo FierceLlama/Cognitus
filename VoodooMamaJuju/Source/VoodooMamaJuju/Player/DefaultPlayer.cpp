@@ -209,7 +209,6 @@ void ADefaultPlayer::SetLastingBuff()
 {
 	inBuffZone = false;
 	BuffTimeline->ReverseFromEnd();
-
 }
 
 //left lasting debuff zone
@@ -217,7 +216,6 @@ void ADefaultPlayer :: SetLastingDebuff()
 {
 	inDebuffZone = false;
 	BuffTimeline->ReverseFromEnd();
-
 }
 
 void ADefaultPlayer::NormalColor()
@@ -264,4 +262,31 @@ void ADefaultPlayer::TimelineFinished()
 void ADefaultPlayer::TimelinePullBack()
 {
    	CameraBoom->TargetArmLength = FMath::Lerp(CameraBoom->TargetArmLength, cameraDist, (PullBackTimeline->GetPlaybackPosition() / PullBackTimeline->GetTimelineLength()));
+}
+
+void ADefaultPlayer::FadePlayer()
+{
+	pFade->PlayFromStart();
+}
+
+void ADefaultPlayer::StopFade()
+{
+	pFade->Stop();
+	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
+	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+}
+
+void ADefaultPlayer::FadeUpdate()
+{
+	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	GetMesh()->SetMaterial(0, DynamicMatInst);
+	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+}
+
+void ADefaultPlayer::FadeFinished()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
 }

@@ -143,6 +143,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* PullBackTimeline;
 
+	UPROPERTY(EditAnywhere)
+	UTimelineComponent *pFade;
+
 	UFUNCTION()
 	virtual void TimelineFinished() PURE_VIRTUAL(APlayerBase::TimelineFinished, ;);
 
@@ -152,8 +155,20 @@ public:
 	FOnTimelineEvent FinishedFunction{};
 	FOnTimelineEvent PullBackFunction{};
 
-
 	virtual void MoveForward(float value) PURE_VIRTUAL(APlayerBase::MoveForward, ;);
 	virtual void Lookup(float value) PURE_VIRTUAL(APlayerBase::Lookup, ;);
-	
+
+	UFUNCTION(BlueprintCallable, Category = PlayerEffects)
+	virtual void FadePlayer() PURE_VIRTUAL(APlayerBase::FadePlayer, ;);
+
+	UFUNCTION(BlueprintCallable, Category = PlayerEffects)
+	virtual void StopFade() PURE_VIRTUAL(APlayerBase::StopFade, ;);
+
+	UFUNCTION()
+	virtual void FadeUpdate() PURE_VIRTUAL(APlayerBase::FadeUpdate, ;);
+	FOnTimelineEvent FadeUpdateFunction{};
+
+	UFUNCTION()
+	virtual void FadeFinished() PURE_VIRTUAL(APlayerBase::FadeFinished, ;);
+	FOnTimelineEvent FadeFinishedFunction{};
 };
