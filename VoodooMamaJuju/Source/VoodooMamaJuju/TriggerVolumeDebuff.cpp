@@ -8,7 +8,7 @@
 
 void ATriggerVolumeDebuff::OnBeginTriggerOverlap_Implementation(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (!(OtherActor->GetClass()->IsChildOf(ASpeechBubbleBase::StaticClass()))))
+	if ((OtherActor != nullptr) && ((OtherActor->GetClass()->IsChildOf(APlayerBase::StaticClass()))))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("In Debuff Zone!"));
 
@@ -23,7 +23,7 @@ void ATriggerVolumeDebuff::OnBeginTriggerOverlap_Implementation(class AActor* Ot
 
 void ATriggerVolumeDebuff::OnEndTriggerOverlap_Implementation(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (!(OtherActor->GetClass()->IsChildOf(ASpeechBubbleBase::StaticClass()))))
+	if ((OtherActor != nullptr) && ((OtherActor->GetClass()->IsChildOf(APlayerBase::StaticClass()))))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Left Debuff Zone!"));
 
