@@ -95,7 +95,8 @@ ADefaultPlayer::ADefaultPlayer()
 
 void ADefaultPlayer::MoveForward(float value)
 {
-	AddMovementInput(GetActorForwardVector(), value);
+	if(GetMovementComponent()->IsMovingOnGround())
+		AddMovementInput(GetActorForwardVector(), value);
 }
 
 void ADefaultPlayer::Lookup(float value)
