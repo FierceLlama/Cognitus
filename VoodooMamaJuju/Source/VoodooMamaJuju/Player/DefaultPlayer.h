@@ -60,12 +60,8 @@ public:
 	void FadeFinished() override;
 
 	float cameraDist;
-	/*static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialInst(TEXT("/Game/Assets/Materials/Character_Translucent_Mat"));
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> InvertedMaterialInst(TEXT("/Game/Assets/Materials/InvertedCharacterMaterial"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> greenSolid(TEXT("/Game/Entities/Player/Model/Character_Green_Diffuse"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> greenOutline(TEXT("/Game/Entities/Player/Model/Character_Green_Outline_Diffuse"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> redSolid(TEXT("/Game/Entities/Player/Model/Character_Red_Diffuse"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> redOutline(TEXT("/Game/Entities/Player/Model/Character_Red_Outline_Diffuse"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleSolid(TEXT("/Game/Entities/Player/Model/Character_Purple_Diffuse"));
-	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleOutline(TEXT("/Game/Entities/Player/Model/Character_Purple_Outline_Diffuse"));*/
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Matinee")
+	void PlayMatinee();
+
 };
