@@ -293,5 +293,6 @@ void ADefaultPlayer::FadeUpdate()
 
 void ADefaultPlayer::FadeFinished()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
+	//UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
+	PlayMatinee();
 }
