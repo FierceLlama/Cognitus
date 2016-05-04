@@ -42,6 +42,8 @@ ADefaultPlayer::ADefaultPlayer()
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	FollowCamera->AddRelativeRotation(FRotator(-20, 0, 0));
+	//FollowCamera->bConstrainAspectRatio = true;
+	//FollowCamera->AspectRatio = 1.6f;
 
 	// Internal particle effects for spark, buff, and debuff
 	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
@@ -277,6 +279,7 @@ void ADefaultPlayer::StopFade()
 	GetMesh()->SetMaterial(0, DynamicMatInst);
 	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
@@ -285,9 +288,11 @@ void ADefaultPlayer::FadeUpdate()
 	GetMesh()->SetMaterial(0, DynamicMatInst);
 	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
 }
 
 void ADefaultPlayer::FadeFinished()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
+	//UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
+	PlayMatinee();
 }
