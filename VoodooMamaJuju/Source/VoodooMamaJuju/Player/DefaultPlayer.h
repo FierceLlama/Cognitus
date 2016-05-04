@@ -38,6 +38,11 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	// Camera shake stuffies
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterInfo)
+	TSubclassOf<UCameraShake> idleShake;
+
+	void BeginPlay() override;
 	void MoveForward(float value) override;
 	void Lookup(float value) override;
 	void BuffPlayer() override;
@@ -64,4 +69,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Matinee")
 	void PlayMatinee();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "CameraEffects")
+	void PlayShake();
 };
