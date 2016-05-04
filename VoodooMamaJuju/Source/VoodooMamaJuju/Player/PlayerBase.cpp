@@ -55,8 +55,7 @@ void APlayerBase::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = 250000;
 	GetCharacterMovement()->GroundFriction = 1.0f;
 
-	NormalMovement();
-	
+	NormalMovement();	
 }
 
 // Called every frame

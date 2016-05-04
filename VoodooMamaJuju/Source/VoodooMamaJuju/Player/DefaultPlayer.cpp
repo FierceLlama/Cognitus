@@ -95,6 +95,11 @@ ADefaultPlayer::ADefaultPlayer()
 	outlinePurple = purpleOutline.Object;
 }
 
+void ADefaultPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void ADefaultPlayer::MoveForward(float value)
 {
 	if(GetMovementComponent()->IsMovingOnGround())
@@ -269,7 +274,7 @@ void ADefaultPlayer::TimelinePullBack()
 
 void ADefaultPlayer::FadePlayer()
 {
-	pFade->PlayFromStart();
+	pFade->PlayFromStart();	
 }
 
 void ADefaultPlayer::StopFade()
@@ -289,6 +294,7 @@ void ADefaultPlayer::FadeUpdate()
 	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
 	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	PlayShake();
 }
 
 void ADefaultPlayer::FadeFinished()
