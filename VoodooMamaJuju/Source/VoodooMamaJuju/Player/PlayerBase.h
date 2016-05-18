@@ -70,6 +70,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float debuffBoomLength;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	float pitchDownAngle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	float pitchUpAngle;
+
 	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	USkeletalMeshComponent *invertedMesh;*/
 

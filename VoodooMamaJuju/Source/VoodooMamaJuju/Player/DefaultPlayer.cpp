@@ -108,7 +108,7 @@ void ADefaultPlayer::MoveForward(float value)
 
 void ADefaultPlayer::Lookup(float value)
 {
-	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), -30.0f, 5.0f), 0, 0));
+	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), this->pitchDownAngle, this->pitchUpAngle), 0, 0));
 	
 }
 
