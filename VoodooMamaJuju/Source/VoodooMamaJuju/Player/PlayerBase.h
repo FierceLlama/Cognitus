@@ -70,15 +70,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	float debuffBoomLength;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
-	USkeletalMeshComponent *invertedMesh;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	USkeletalMeshComponent *invertedMesh;*/
 
 	//** Materials */
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UMaterialInstanceDynamic *DynamicMatInst;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
-	UMaterialInstanceDynamic *InvertedDynamicMatInst;
+	//UMaterialInstanceDynamic *InvertedDynamicMatInst;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UTexture2D *solidGreen;
