@@ -103,8 +103,7 @@ void ADefaultPlayer::MoveForward(float value)
 
 void ADefaultPlayer::Lookup(float value)
 {
-	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), -30.0f, 5.0f), 0, 0));
-	
+	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), -30.0f, 5.0f), 0, 0));	
 }
 
 //resets players variables to normal movement
@@ -204,7 +203,6 @@ void ADefaultPlayer::Debuff()
 		PullBackTimeline->Stop();
 		PullBackTimeline->PlayFromStart();
 	}
-
 }
 
 //left lasting buff zone
@@ -295,4 +293,9 @@ void ADefaultPlayer::FadeFinished()
 {
 	//UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
 	PlayMatinee();
+}
+
+void ADefaultPlayer::PlayShake()
+{
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientPlayCameraShake(this->landingShake, 1.0f);
 }
