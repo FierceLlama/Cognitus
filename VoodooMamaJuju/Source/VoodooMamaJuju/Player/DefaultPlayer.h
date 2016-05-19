@@ -40,9 +40,8 @@ public:
 
 	// Camera shake stuffies
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterInfo)
-	TSubclassOf<UCameraShake> idleShake;
+	TSubclassOf<UCameraShake> landingShake;
 
-	void BeginPlay() override;
 	void MoveForward(float value) override;
 	void Lookup(float value) override;
 	void BuffPlayer() override;
@@ -69,6 +68,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Matinee")
 	void PlayMatinee();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "CameraEffects")
+	UFUNCTION(BluePrintCallable, Category = "CameraEffects")
 	void PlayShake();
 };

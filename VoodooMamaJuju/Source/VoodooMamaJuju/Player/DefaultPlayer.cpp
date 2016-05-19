@@ -95,11 +95,6 @@ ADefaultPlayer::ADefaultPlayer()
 	outlinePurple = purpleOutline.Object;
 }
 
-void ADefaultPlayer::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ADefaultPlayer::MoveForward(float value)
 {
 	if(GetMovementComponent()->IsMovingOnGround())
@@ -108,8 +103,7 @@ void ADefaultPlayer::MoveForward(float value)
 
 void ADefaultPlayer::Lookup(float value)
 {
-	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), this->pitchDownAngle, this->pitchUpAngle), 0, 0));
-	
+	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), -30.0f, 5.0f), 0, 0));	
 }
 
 //resets players variables to normal movement
@@ -209,7 +203,6 @@ void ADefaultPlayer::Debuff()
 		PullBackTimeline->Stop();
 		PullBackTimeline->PlayFromStart();
 	}
-
 }
 
 //left lasting buff zone
@@ -274,7 +267,7 @@ void ADefaultPlayer::TimelinePullBack()
 
 void ADefaultPlayer::FadePlayer()
 {
-	pFade->PlayFromStart();	
+	pFade->PlayFromStart();
 }
 
 void ADefaultPlayer::StopFade()
@@ -294,11 +287,15 @@ void ADefaultPlayer::FadeUpdate()
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
-	PlayShake();
 }
 
 void ADefaultPlayer::FadeFinished()
 {
 	//UGameplayStatics::OpenLevel(GetWorld(), "ContinueScreen");
 	PlayMatinee();
+}
+
+void ADefaultPlayer::PlayShake()
+{
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientPlayCameraShake(this->landingShake, 1.0f);
 }
