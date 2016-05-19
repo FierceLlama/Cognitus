@@ -17,16 +17,16 @@ ADefaultPlayer::ADefaultPlayer()
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprintGeneratedClass> AnimBPFinder(TEXT("/Game/Entities/Player/Animations/Ooze_AnimationBP.Ooze_AnimationBP_C"));
 	GetMesh()->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
 
-	invertedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("InvertedMesh"));
-	invertedMesh->AttachTo(GetMesh());
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> InvertedMeshAsset(TEXT("/Game/Entities/Player/Model/Ooze_Invert"));
-	if (InvertedMeshAsset.Succeeded())
-	{
-		invertedMesh->SetSkeletalMesh(InvertedMeshAsset.Object);
-	}
-	invertedMesh->SetRelativeScale3D(FVector(.99, .99, .99));
-	//invertedMesh->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
-		invertedMesh->SetMasterPoseComponent(GetMesh());
+	//invertedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("InvertedMesh"));
+	//invertedMesh->AttachTo(GetMesh());
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> InvertedMeshAsset(TEXT("/Game/Entities/Player/Model/Ooze_Invert"));
+	//if (InvertedMeshAsset.Succeeded())
+	//{
+	//	invertedMesh->SetSkeletalMesh(InvertedMeshAsset.Object);
+	//}
+	//invertedMesh->SetRelativeScale3D(FVector(.99, .99, .99));
+	////invertedMesh->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
+	//	invertedMesh->SetMasterPoseComponent(GetMesh());
 	//GetMesh()->SetMasterPoseComponent(invertedMesh);
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -78,7 +78,7 @@ ADefaultPlayer::ADefaultPlayer()
 
 	//get and set all materials for player and inverted player
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialInst(TEXT("/Game/Assets/Materials/Character_Translucent_Mat"));
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> InvertedMaterialInst(TEXT("/Game/Assets/Materials/InvertedCharacterMaterial"));
+	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> InvertedMaterialInst(TEXT("/Game/Assets/Materials/InvertedCharacterMaterial"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> greenSolid(TEXT("/Game/Entities/Player/Model/Character_Green_Diffuse"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> greenOutline(TEXT("/Game/Entities/Player/Model/Character_Green_Outline_Diffuse"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> redSolid(TEXT("/Game/Entities/Player/Model/Character_Red_Diffuse"));
@@ -86,18 +86,13 @@ ADefaultPlayer::ADefaultPlayer()
 	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleSolid(TEXT("/Game/Entities/Player/Model/Character_Purple_Diffuse"));
 	static ConstructorHelpers::FObjectFinder<UTexture2D> purpleOutline(TEXT("/Game/Entities/Player/Model/Character_Purple_Outline_Diffuse"));
 	DynamicMatInst = GetMesh()->CreateDynamicMaterialInstance(0, MaterialInst.Object);
-	InvertedDynamicMatInst = invertedMesh->CreateDynamicMaterialInstance(0, InvertedMaterialInst.Object);
+	//InvertedDynamicMatInst = invertedMesh->CreateDynamicMaterialInstance(0, InvertedMaterialInst.Object);
 	solidGreen = greenSolid.Object;
 	outlineGreen = greenOutline.Object;
 	solidRed = redSolid.Object;
 	outlineRed = redOutline.Object;
 	solidPurple = purpleSolid.Object;
 	outlinePurple = purpleOutline.Object;
-}
-
-void ADefaultPlayer::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void ADefaultPlayer::MoveForward(float value)
@@ -232,8 +227,8 @@ void ADefaultPlayer::NormalColor()
 	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineGreen);
 	GetMesh()->SetMaterial(0, DynamicMatInst);
-	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineGreen);
-	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	/*InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineGreen);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 }
 
 void ADefaultPlayer::BuffColor()
@@ -242,8 +237,8 @@ void ADefaultPlayer::BuffColor()
 	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineRed);
 	GetMesh()->SetMaterial(0, DynamicMatInst);
-	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineRed);
-	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	/*InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlineRed);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 }
 
 void ADefaultPlayer::DebuffColor()
@@ -252,8 +247,8 @@ void ADefaultPlayer::DebuffColor()
 	GetMesh()->SetMaterial(0, DynamicMatInst);
 	DynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlinePurple);
 	GetMesh()->SetMaterial(0, DynamicMatInst);
-	InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlinePurple);
-	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	/*InvertedDynamicMatInst->SetTextureParameterValue(FName{ TEXT("OutlineTexture") }, outlinePurple);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 }
 
 //set the character back to normal after the buff/debuff time ends
@@ -274,27 +269,26 @@ void ADefaultPlayer::TimelinePullBack()
 
 void ADefaultPlayer::FadePlayer()
 {
-	pFade->PlayFromStart();	
+	pFade->PlayFromStart();
 }
 
 void ADefaultPlayer::StopFade()
 {
 	pFade->Stop();
-	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
-	GetMesh()->SetMaterial(0, DynamicMatInst);
-	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
-	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	/*DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	GetMesh()->SetMaterial(0, DynamicMatInst);*/
+	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 	PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
 {
-	DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
-	GetMesh()->SetMaterial(0, DynamicMatInst);
-	InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
-	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);
+	/*DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	GetMesh()->SetMaterial(0, DynamicMatInst);*/
+	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
+	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
 	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
-	PlayShake();
 }
 
 void ADefaultPlayer::FadeFinished()
