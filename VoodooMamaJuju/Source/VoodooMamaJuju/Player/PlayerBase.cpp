@@ -52,6 +52,10 @@ void APlayerBase::BeginPlay()
 	buffBoomLength = 1000;
 	debuffBoomLength = 400;
 
+	// These will be set in the character blueprint so design can fiddle with values
+	/*this->pitchDownAngle = 0.0f;
+	this->pitchUpAngle = 0.0f;*/
+
 	GetCharacterMovement()->MaxWalkSpeed = 250000;
 	GetCharacterMovement()->GroundFriction = 1.0f;
 

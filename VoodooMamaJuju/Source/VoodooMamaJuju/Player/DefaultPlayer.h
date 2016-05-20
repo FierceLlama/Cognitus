@@ -42,6 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterInfo)
 	TSubclassOf<UCameraShake> landingShake;
 
+	void Tick(float DeltaSeconds) override;
 	void MoveForward(float value) override;
 	void Lookup(float value) override;
 	void BuffPlayer() override;
