@@ -71,4 +71,16 @@ public:
 
 	UFUNCTION(BluePrintCallable, Category = "CameraEffects")
 	void PlayShake();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void PlayMoving();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void StopMoving();
+	
+	UFUNCTION(BluePrintCallable, Category = "Sounds")
+	void Squish();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void PlaySquish();
 };
