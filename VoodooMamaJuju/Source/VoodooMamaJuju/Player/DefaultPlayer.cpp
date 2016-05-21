@@ -108,8 +108,22 @@ void ADefaultPlayer::Tick(float DeltaSeconds)
 
 void ADefaultPlayer::MoveForward(float value)
 {
-	if(GetMovementComponent()->IsMovingOnGround())
+	if (GetMovementComponent()->IsMovingOnGround())
+	{
 		AddMovementInput(GetActorForwardVector(), value);
+		if (value > 0)
+		{
+			this->PlayMoving();
+		}
+		else
+		{
+			this->StopMoving();
+		}
+	}
+	else
+	{
+		this->StopMoving();
+	}
 }
 
 void ADefaultPlayer::Lookup(float value)
@@ -296,17 +310,17 @@ void ADefaultPlayer::TimelinePullBack()
 
 void ADefaultPlayer::FadePlayer()
 {
-	pFade->PlayFromStart();
+	this->pFade->PlayFromStart();
 }
 
 void ADefaultPlayer::StopFade()
 {
-	pFade->Stop();
+	this->pFade->Stop();
 	/*DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
@@ -315,7 +329,7 @@ void ADefaultPlayer::FadeUpdate()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
 }
 
 void ADefaultPlayer::FadeFinished()
@@ -327,4 +341,9 @@ void ADefaultPlayer::FadeFinished()
 void ADefaultPlayer::PlayShake()
 {
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientPlayCameraShake(this->landingShake, 1.0f);
+}
+
+void ADefaultPlayer::Squish()
+{
+	this->PlaySquish();
 }
