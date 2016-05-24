@@ -57,7 +57,7 @@ ADefaultPlayer::ADefaultPlayer()
 	{
 		PlayerSpark->SetTemplate(sparkAsset.Object);
 	}
-	PlayerSpark->SetRelativeLocation(FVector(0, -15, -40));
+	PlayerSpark->SetRelativeLocation(FVector(0, 0, 15));
 	PlayerSpark->SetTranslucentSortPriority(50);
 
 	PlayerBuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerBuff"));
@@ -97,13 +97,6 @@ ADefaultPlayer::ADefaultPlayer()
 	outlineRed = redOutline.Object;
 	solidPurple = purpleSolid.Object;
 	outlinePurple = purpleOutline.Object;
-}
-
-void ADefaultPlayer::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	//FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->RelativeLocation, UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));
-	//CameraBoom->SetRelativeRotation(FRotator(FMath::Clamp(CameraBoom->GetComponentRotation().Pitch, this->pitchDownAngle, this->pitchUpAngle), CameraBoom->GetComponentRotation().Yaw, CameraBoom->GetComponentRotation().Roll));
 }
 
 void ADefaultPlayer::MoveForward(float value)

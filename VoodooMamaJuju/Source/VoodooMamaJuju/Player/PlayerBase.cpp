@@ -60,7 +60,6 @@ void APlayerBase::BeginPlay()
 	GetCharacterMovement()->GroundFriction = 1.0f;
 
 	NormalMovement();
-	
 }
 
 // Called every frame
