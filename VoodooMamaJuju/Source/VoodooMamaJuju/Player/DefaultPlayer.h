@@ -42,6 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CharacterInfo)
 	TSubclassOf<UCameraShake> landingShake;
 
+	void Tick(float DeltaSeconds) override;
 	void MoveForward(float value) override;
 	void Lookup(float value) override;
 	void BuffPlayer() override;
@@ -70,4 +71,16 @@ public:
 
 	UFUNCTION(BluePrintCallable, Category = "CameraEffects")
 	void PlayShake();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void PlayMoving();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void StopMoving();
+	
+	UFUNCTION(BluePrintCallable, Category = "Sounds")
+	void Squish();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
+	void PlaySquish();
 };

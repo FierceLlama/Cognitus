@@ -2,6 +2,7 @@
 
 #include "VoodooMamaJuju.h"
 #include "DefaultPlayer.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 ADefaultPlayer::ADefaultPlayer()
 {
@@ -13,6 +14,8 @@ ADefaultPlayer::ADefaultPlayer()
 	}
 
 	GetMesh()->AddRelativeRotation(FRotator(0, -90, 0));
+	//GetMesh()->SetRelativeScale3D(FVector(2.0f, 2.0f, 2.0f));
+	GetMesh()->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 
 	static ConstructorHelpers::FObjectFinder<UAnimBlueprintGeneratedClass> AnimBPFinder(TEXT("/Game/Entities/Player/Animations/Ooze_AnimationBP.Ooze_AnimationBP_C"));
 	GetMesh()->AnimBlueprintGeneratedClass = AnimBPFinder.Object;
@@ -33,7 +36,7 @@ ADefaultPlayer::ADefaultPlayer()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(GetMesh());
 	CameraBoom->TargetArmLength = 650; // The camera follows at this distance behind the character	
-	CameraBoom->SetRelativeLocation(FVector(-150, 0, 240));
+	CameraBoom->SetRelativeLocation(FVector(-150, -200, 500));
 	CameraBoom->AddRelativeRotation(FRotator(0, 90, 0));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
@@ -41,13 +44,14 @@ ADefaultPlayer::ADefaultPlayer()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	FollowCamera->AddRelativeRotation(FRotator(-20, 0, 0));
+	//FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->RelativeLocation, UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));
+	//FollowCamera->AddRelativeRotation(FRotator(-40, 0, 0));
 	//FollowCamera->bConstrainAspectRatio = true;
 	//FollowCamera->AspectRatio = 1.6f;
 
 	// Internal particle effects for spark, buff, and debuff
 	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
-	PlayerSpark->AttachTo(GetCapsuleComponent());
+	PlayerSpark->AttachTo(GetMesh());
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/PlayerSpark.PlayerSpark"));
 	if (sparkAsset.Succeeded())
 	{
@@ -95,15 +99,54 @@ ADefaultPlayer::ADefaultPlayer()
 	outlinePurple = purpleOutline.Object;
 }
 
+void ADefaultPlayer::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	//FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->RelativeLocation, UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));
+	//CameraBoom->SetRelativeRotation(FRotator(FMath::Clamp(CameraBoom->GetComponentRotation().Pitch, this->pitchDownAngle, this->pitchUpAngle), CameraBoom->GetComponentRotation().Yaw, CameraBoom->GetComponentRotation().Roll));
+}
+
 void ADefaultPlayer::MoveForward(float value)
 {
-	if(GetMovementComponent()->IsMovingOnGround())
+	if (GetMovementComponent()->IsMovingOnGround())
+	{
 		AddMovementInput(GetActorForwardVector(), value);
+		if (value > 0)
+		{
+			this->PlayMoving();
+		}
+		else
+		{
+			this->StopMoving();
+		}
+	}
+	else
+	{
+		this->StopMoving();
+	}
 }
 
 void ADefaultPlayer::Lookup(float value)
 {
-	FollowCamera->SetRelativeRotation(FRotator(FMath::Clamp((FollowCamera->GetComponentRotation().Pitch + value), -30.0f, 5.0f), 0, 0));	
+	float tempPitch = this->CameraBoom->GetComponentRotation().Pitch + value;
+	if (tempPitch < this->pitchUpAngle && tempPitch > this->pitchDownAngle)
+	{
+		this->CameraBoom->AddLocalRotation(FRotator(value, 0.0f, 0.0f));
+	}
+	else
+	{
+		if (tempPitch < this->pitchDownAngle)
+		{
+			this->CameraBoom->SetWorldRotation(FRotator(this->pitchDownAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
+		}
+		else
+		{
+			this->CameraBoom->SetWorldRotation(FRotator(this->pitchUpAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
+		}
+	}
+
+	this->FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->GetComponentLocation(), 
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 150)));
 }
 
 //resets players variables to normal movement
@@ -267,17 +310,17 @@ void ADefaultPlayer::TimelinePullBack()
 
 void ADefaultPlayer::FadePlayer()
 {
-	pFade->PlayFromStart();
+	this->pFade->PlayFromStart();
 }
 
 void ADefaultPlayer::StopFade()
 {
-	pFade->Stop();
+	this->pFade->Stop();
 	/*DynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
@@ -286,7 +329,7 @@ void ADefaultPlayer::FadeUpdate()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
 }
 
 void ADefaultPlayer::FadeFinished()
@@ -298,4 +341,9 @@ void ADefaultPlayer::FadeFinished()
 void ADefaultPlayer::PlayShake()
 {
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientPlayCameraShake(this->landingShake, 1.0f);
+}
+
+void ADefaultPlayer::Squish()
+{
+	this->PlaySquish();
 }
