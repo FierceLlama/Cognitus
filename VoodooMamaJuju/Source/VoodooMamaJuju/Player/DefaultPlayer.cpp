@@ -36,7 +36,7 @@ ADefaultPlayer::ADefaultPlayer()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(GetMesh());
 	CameraBoom->TargetArmLength = 650; // The camera follows at this distance behind the character	
-	CameraBoom->SetRelativeLocation(FVector(-150, -200, 500));
+	CameraBoom->SetRelativeLocation(FVector(-150, -400, 500));
 	CameraBoom->AddRelativeRotation(FRotator(0, 90, 0));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
