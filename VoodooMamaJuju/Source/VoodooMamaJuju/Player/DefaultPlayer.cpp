@@ -51,7 +51,7 @@ ADefaultPlayer::ADefaultPlayer()
 
 	// Internal particle effects for spark, buff, and debuff
 	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
-	PlayerSpark->AttachTo(GetMesh());
+	PlayerSpark->AttachTo(GetCapsuleComponent());
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/PlayerSpark.PlayerSpark"));
 	if (sparkAsset.Succeeded())
 	{
