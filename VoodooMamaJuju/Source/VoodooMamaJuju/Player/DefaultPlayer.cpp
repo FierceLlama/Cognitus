@@ -36,7 +36,7 @@ ADefaultPlayer::ADefaultPlayer()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(GetMesh());
 	CameraBoom->TargetArmLength = 650; // The camera follows at this distance behind the character	
-	CameraBoom->SetRelativeLocation(FVector(-150, -200, 500));
+	CameraBoom->SetRelativeLocation(FVector(-150, -400, 500));
 	CameraBoom->AddRelativeRotation(FRotator(0, 90, 0));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
@@ -51,13 +51,13 @@ ADefaultPlayer::ADefaultPlayer()
 
 	// Internal particle effects for spark, buff, and debuff
 	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
-	PlayerSpark->AttachTo(GetMesh());
+	PlayerSpark->AttachTo(GetCapsuleComponent());
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/PlayerSpark.PlayerSpark"));
 	if (sparkAsset.Succeeded())
 	{
 		PlayerSpark->SetTemplate(sparkAsset.Object);
 	}
-	PlayerSpark->SetRelativeLocation(FVector(0, -15, -40));
+	PlayerSpark->SetRelativeLocation(FVector(0, 0, 15));
 	PlayerSpark->SetTranslucentSortPriority(50);
 
 	PlayerBuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerBuff"));
@@ -97,13 +97,6 @@ ADefaultPlayer::ADefaultPlayer()
 	outlineRed = redOutline.Object;
 	solidPurple = purpleSolid.Object;
 	outlinePurple = purpleOutline.Object;
-}
-
-void ADefaultPlayer::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	//FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->RelativeLocation, UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));
-	//CameraBoom->SetRelativeRotation(FRotator(FMath::Clamp(CameraBoom->GetComponentRotation().Pitch, this->pitchDownAngle, this->pitchUpAngle), CameraBoom->GetComponentRotation().Yaw, CameraBoom->GetComponentRotation().Roll));
 }
 
 void ADefaultPlayer::MoveForward(float value)
