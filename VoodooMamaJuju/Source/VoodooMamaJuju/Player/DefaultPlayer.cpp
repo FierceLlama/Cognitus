@@ -101,22 +101,26 @@ ADefaultPlayer::ADefaultPlayer()
 
 void ADefaultPlayer::MoveForward(float value)
 {
-	if (GetMovementComponent()->IsMovingOnGround())
-	{
+	/*if (GetMovementComponent()->IsMovingOnGround())
+	{*/
 		AddMovementInput(GetActorForwardVector(), value);
 		if (value > 0)
 		{
 			this->PlayMoving();
 		}
+		else if(GetMovementComponent()->IsFalling())
+		{
+			this->StopMoving();
+		}
 		else
 		{
 			this->StopMoving();
 		}
-	}
+	/*}
 	else
 	{
 		this->StopMoving();
-	}
+	}*/
 }
 
 void ADefaultPlayer::Lookup(float value)
