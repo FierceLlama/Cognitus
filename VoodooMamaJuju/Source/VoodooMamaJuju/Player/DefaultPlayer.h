@@ -65,8 +65,10 @@ public:
 
 	float cameraDist;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Matinee")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Matinee")
 	void PlayMatinee();
+
+	//UFUNCTION(BlueprintCallable, Category = "CameraEffects")
 
 	UFUNCTION(BluePrintCallable, Category = "CameraEffects")
 	void PlayShake();
@@ -82,4 +84,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Sounds")
 	void PlaySquish();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CameraEffects")
+	void CameraLerpMatinee();
 };
