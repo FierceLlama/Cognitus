@@ -52,7 +52,7 @@ ADefaultPlayer::ADefaultPlayer()
 	// Internal particle effects for spark, buff, and debuff
 	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
 	PlayerSpark->AttachTo(GetCapsuleComponent());
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/PlayerSpark.PlayerSpark"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/NumberParticle.NumberParticle"));
 	if (sparkAsset.Succeeded())
 	{
 		PlayerSpark->SetTemplate(sparkAsset.Object);
@@ -306,7 +306,7 @@ void ADefaultPlayer::StopFade()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	//this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
@@ -315,7 +315,7 @@ void ADefaultPlayer::FadeUpdate()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	//this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
 }
 
 void ADefaultPlayer::FadeFinished()
