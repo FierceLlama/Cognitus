@@ -125,24 +125,26 @@ void ADefaultPlayer::MoveForward(float value)
 
 void ADefaultPlayer::Lookup(float value)
 {
-	float tempPitch = this->CameraBoom->GetComponentRotation().Pitch + value;
-	if (tempPitch < this->pitchUpAngle && tempPitch > this->pitchDownAngle)
-	{
-		this->CameraBoom->AddLocalRotation(FRotator(value, 0.0f, 0.0f));
-		//this->FollowCamera->SetWorldRotation();
-		//UKismetMathLibrary::RotateAngleAxis()
-	}
-	else
-	{
-		if (tempPitch < this->pitchDownAngle)
-		{
-			this->CameraBoom->SetWorldRotation(FRotator(this->pitchDownAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
-		}
-		else
-		{
-			this->CameraBoom->SetWorldRotation(FRotator(this->pitchUpAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
-		}
-	}
+	this->CameraBoom->SetWorldRotation(FRotator(FMath::Clamp(this->CameraBoom->GetComponentRotation().Pitch + value, this->pitchDownAngle, this->pitchUpAngle),
+		this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
+	//float tempPitch = this->CameraBoom->GetComponentRotation().Pitch + value;
+	//if (tempPitch < this->pitchUpAngle && tempPitch > this->pitchDownAngle)
+	//{
+	//	this->CameraBoom->AddLocalRotation(FRotator(value, 0.0f, 0.0f));
+	//	//this->FollowCamera->SetWorldRotation();
+	//	//UKismetMathLibrary::RotateAngleAxis()
+	//}
+	//else
+	//{
+	//	if (tempPitch < this->pitchDownAngle)
+	//	{
+	//		this->CameraBoom->SetWorldRotation(FRotator(this->pitchDownAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
+	//	}
+	//	else
+	//	{
+	//		this->CameraBoom->SetWorldRotation(FRotator(this->pitchUpAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
+	//	}
+	//}
 	/*this->FollowCamera->SetWorldLocation(UKismetMathLibrary::RotateAngleAxis(this->FollowCamera->GetComponentLocation(), value, 
 		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));*/
 	/*FRotator RotationDelta(value, 0.f, 0.f);
