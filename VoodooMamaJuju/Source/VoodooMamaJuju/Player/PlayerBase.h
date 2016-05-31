@@ -170,7 +170,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = PlayerEffects)
 	virtual void StopFade() PURE_VIRTUAL(APlayerBase::StopFade, ;);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = PlayerEffects)
 	virtual void FadeUpdate() PURE_VIRTUAL(APlayerBase::FadeUpdate, ;);
 	FOnTimelineEvent FadeUpdateFunction{};
 

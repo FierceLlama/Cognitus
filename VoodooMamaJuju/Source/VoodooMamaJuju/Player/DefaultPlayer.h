@@ -87,4 +87,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CameraEffects")
 	void CameraLerpMatinee();
+
+	/*UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = PlayerEffects)
+	void FadeUpdate();*/
 };

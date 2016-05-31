@@ -50,7 +50,7 @@ ADefaultPlayer::ADefaultPlayer()
 	//FollowCamera->AspectRatio = 1.6f;
 
 	// Internal particle effects for spark, buff, and debuff
-	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
+	/*PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
 	PlayerSpark->AttachTo(GetCapsuleComponent());
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> sparkAsset(TEXT("/Game/Assets/Effects/NumberParticle.NumberParticle"));
 	if (sparkAsset.Succeeded())
@@ -59,8 +59,19 @@ ADefaultPlayer::ADefaultPlayer()
 	}
 	PlayerSpark->SetRelativeLocation(FVector(0, 0, 15));
 	PlayerSpark->SetTranslucentSortPriority(50);
+	this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));*/
 
-	PlayerBuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerBuff"));
+	PlayerSpark = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerSpark"));
+	PlayerSpark->AttachTo(GetCapsuleComponent());
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> numberAsset(TEXT("/Game/Assets/Effects/NumberParticle.NumberParticle"));
+	if (numberAsset.Succeeded())
+	{
+		this->PlayerSpark->SetTemplate(numberAsset.Object);
+	}
+	this->PlayerSpark->SetRelativeLocation(FVector(0.0f, 0.0f, 15.0f));
+	this->PlayerSpark->SetTranslucentSortPriority(100.0f);
+
+	/*PlayerBuff = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PlayerBuff"));
 	PlayerBuff->AttachTo(GetCapsuleComponent());
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> buffAsset(TEXT("/Game/Assets/Effects/PlayerBuff.PlayerBuff"));
 	if (buffAsset.Succeeded())
@@ -78,7 +89,7 @@ ADefaultPlayer::ADefaultPlayer()
 		PlayerDebuff->SetTemplate(debuffAsset.Object);
 	}
 	PlayerDebuff->SetTranslucentSortPriority(100);
-	PlayerDebuff->bAutoActivate = false;
+	PlayerDebuff->bAutoActivate = false;*/
 
 	//get and set all materials for player and inverted player
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialInst(TEXT("/Game/Assets/Materials/Character_Translucent_Mat"));
@@ -145,8 +156,8 @@ void ADefaultPlayer::NormalMovement()
 	cameraDist = normalBoomLength;
 	PullBackTimeline->Stop();
 	PullBackTimeline->PlayFromStart();
-	PlayerBuff->SetActive(false);
-	PlayerDebuff->SetActive(false);
+	/*PlayerBuff->SetActive(false);
+	PlayerDebuff->SetActive(false);*/
 }
 
 //player gains buff
@@ -156,9 +167,9 @@ void ADefaultPlayer::BuffPlayer()
 	GetCharacterMovement()->AddImpulse((GetActorForwardVector() * 10000));
 	GetCharacterMovement()->MaxAcceleration = buffAcceleration;
     GetCharacterMovement()->BrakingDecelerationWalking = buffBrakingDeceleration;
-	PlayerBuff->SetActive(true);
+	//PlayerBuff->SetActive(true);
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Buffed!!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Buffed!!"));
 }
 
 //player gains debuff
@@ -168,23 +179,23 @@ void ADefaultPlayer::DebuffPlayer()
 	GetCharacterMovement()->Velocity = FVector(0, 0, 0);
 	GetCharacterMovement()->MaxAcceleration = debuffAcceleration;
 	GetCharacterMovement()->BrakingDecelerationWalking = debuffBrakingDeceleration;
-	PlayerDebuff->SetActive(true);
+	//PlayerDebuff->SetActive(true);
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Debuffed!!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Player Debuffed!!"));
 }
 
 void ADefaultPlayer::RemoveBuff()
 {
 	BuffTimeline->Stop();
 	isBuffed = false;
-	PlayerBuff->SetActive(false);
+	//PlayerBuff->SetActive(false);
 }
 
 void ADefaultPlayer::RemoveDebuff()
 {
 	BuffTimeline->Stop();
 	isDebuffed = false;
-	PlayerDebuff->SetActive(false);
+	//PlayerDebuff->SetActive(false);
 }
 
 //player in a buff zone
@@ -306,7 +317,7 @@ void ADefaultPlayer::StopFade()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, 0.0f);
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	//this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	this->PlayerSpark->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ADefaultPlayer::FadeUpdate()
@@ -315,7 +326,13 @@ void ADefaultPlayer::FadeUpdate()
 	GetMesh()->SetMaterial(0, DynamicMatInst);*/
 	/*InvertedDynamicMatInst->SetScalarParameterValue(FName{ TEXT("Blend") }, pFade->GetPlaybackPosition() / pFade->GetTimelineLength());
 	invertedMesh->SetMaterial(0, InvertedDynamicMatInst);*/
-	//this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	//if (this->PlayerSpark)
+	//{
+		this->PlayerSpark->SetRelativeScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	//}
+	//this->PlayerSpark->SetVectorParameter(FName{ TEXT("particleSize") }, FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString("Fading"));
+	//this->PlayerSpark->SetWorldScale3D(FVector(FVector(1.0f, 1.0f, 1.0f) * (1 - pFade->GetPlaybackPosition() / pFade->GetTimelineLength())));
 }
 
 void ADefaultPlayer::FadeFinished()
