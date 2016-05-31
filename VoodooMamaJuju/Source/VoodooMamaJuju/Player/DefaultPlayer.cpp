@@ -129,6 +129,8 @@ void ADefaultPlayer::Lookup(float value)
 	if (tempPitch < this->pitchUpAngle && tempPitch > this->pitchDownAngle)
 	{
 		this->CameraBoom->AddLocalRotation(FRotator(value, 0.0f, 0.0f));
+		//this->FollowCamera->SetWorldRotation();
+		//UKismetMathLibrary::RotateAngleAxis()
 	}
 	else
 	{
@@ -141,9 +143,31 @@ void ADefaultPlayer::Lookup(float value)
 			this->CameraBoom->SetWorldRotation(FRotator(this->pitchUpAngle, this->CameraBoom->GetComponentRotation().Yaw, this->CameraBoom->GetComponentRotation().Roll));
 		}
 	}
+	/*this->FollowCamera->SetWorldLocation(UKismetMathLibrary::RotateAngleAxis(this->FollowCamera->GetComponentLocation(), value, 
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation()));*/
+	/*FRotator RotationDelta(value, 0.f, 0.f);
+	FTransform Transform = CameraBoom->GetComponentTransform();
+	FRotator Rotation = CameraBoom->GetComponentRotation();
+	Rotation.Yaw += value;
+	Transform.SetRotation(Rotation.Quaternion());
+	Transform.ConcatenateRotation(RotationDelta.Quaternion());
+	Transform.NormalizeRotation();
+	CameraBoom->SetWorldTransform(Transform);*/
+	/*FRotationMatrix rMat(FRotator(value, 0.0f, 0.0f));
+	this->CameraBoom->SetWorldLocation(FVector(CameraBoom->GetComponentLocation() +
+		rMat.TransformPosition(CameraBoom->GetComponentLocation() - 
+		(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 400)))));*/
+	//AddControllerPitchInput(value);
+
+	/*FRotator Rotation = CameraBoom->GetComponentRotation();
+	Rotation.Yaw = 
+	Rotation.Pitch = FMath::Clamp(Rotation.Pitch + value, -85.0f, 85.0f);
+	CameraBoom->SetRelativeRotation(Rotation);*/
+
+
 
 	this->FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->GetComponentLocation(), 
-		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 150)));
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 400)));
 }
 
 //resets players variables to normal movement
