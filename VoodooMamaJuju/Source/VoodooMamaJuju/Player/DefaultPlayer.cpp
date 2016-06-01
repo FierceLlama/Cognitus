@@ -169,7 +169,8 @@ void ADefaultPlayer::Lookup(float value)
 
 
 	this->FollowCamera->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(FollowCamera->GetComponentLocation(), 
-		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 400)));
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorLocation() + (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorRightVector() * 400)
+		+ (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter()->GetActorForwardVector() * 400)));
 }
 
 //resets players variables to normal movement
